@@ -1,278 +1,472 @@
 <!DOCTYPE html>
-<!-- Visualization & Content Choices:
-    - Header: Name, Job Title, and Profile Picture. Goal: Inform. Method: HTML/Tailwind, img tag.
-    - Navigation: Removed for single-page scroll.
-    - Basic Info: Structured text, Unicode icons for contact. Goal: Inform. Method: HTML/Tailwind.
-    - Preferences: Bulleted list. Goal: Inform. Method: HTML/Tailwind.
-    - Career Plan: Paragraph text. Goal: Inform. Method: HTML/Tailwind.
-    - Skills: Text list only, chart removed. Goal: Inform. Method: HTML/Tailwind.
-    - Work Experience: Accordion for each company (HTML/Tailwind/JS). Each item lists role, responsibilities, and tech highlights, ordered from most recent to oldest. Goal: Inform/Detail. Method: HTML/Tailwind/JS.
-    - PDF Export Button: Triggers browser print function. Goal: Utility. Method: HTML/JS.
-    - Justification: The single-page scrollable layout provides a continuous reading experience, ideal for printing. Removing the chart simplifies the skills section as requested. The PDF export enhances usability for sharing. Content density is increased for a more compact presentation.
--->
 <html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>詹前广 - 简历</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <style>
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
+          "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+          "Noto Color Emoji";
+        font-size: 15px;
+        line-height: 1.25;
+        color: #334155;
+        /* background: #f9fafc; */
+        background: #f5f7fa;
+        -webkit-print-color-adjust: exact;
+      }
+      .container {
+        max-width: 900px;
+        padding: 18px 12px;
+        margin: 0 auto;
+        box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.04);
+        /* background: #fff; */
+        border-radius: 12px;
+      }
+      .resume-section {
+        margin-bottom: 18px;
+        padding: 18px 16px;
+        border-radius: 10px;
+        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.03);
+        border: 1px solid #e5e7eb;
+        background: #f5f7fa;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .resume-section h2 {
+        font-size: 1.15rem;
+        margin-bottom: 0.5rem;
+      }
+      header img {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 0.5rem;
+        border-width: 3px;
+      }
+      h1 {
+        font-size: 2rem;
+        margin-bottom: 0.2rem;
+      }
+      .text-lg,
+      .md\:text-xl {
+        font-size: 1.1rem;
+      }
+      .grid p,
+      .text-sm {
+        font-size: 0.97rem;
+      }
+      ul,
+      ol {
+        margin-top: 0.2rem;
+        margin-bottom: 0.2rem;
+      }
+      ul li,
+      ol li {
+        margin-bottom: 0.15rem;
+      }
+      footer {
+        margin-top: 1.5rem;
+        font-size: 0.95rem;
+        color: #64748b;
+      }
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #64748b;
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #475569;
+      }
+
+      @media print {
+        html,
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-            line-height: 1.5; /* Adjusted for compactness */
+          background: #fff !important;
+          font-size: 13px !important;
+          line-height: 1.22 !important;
+          color: #334155 !important;
         }
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
+        .container {
+          box-shadow: none !important;
+          border-radius: 0 !important;
+          padding: 10mm 5mm !important;
+          max-width: 100% !important;
+          width: 100% !important;
         }
-        .accordion-button.open .accordion-arrow {
-            transform: rotate(90deg);
+        .resume-section {
+          box-shadow: none !important;
+          border-radius: 0 !important;
+          border: 1px solid #e5e7eb !important;
+          margin-bottom: 10px !important;
+          padding: 10px 8px !important;
+          background: #f5f7fa !important;
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
         }
-        /* Custom scrollbar for better aesthetics if content overflows */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+        #skills {
+          margin-top: 40mm !important;
         }
-        ::-webkit-scrollbar-track {
-            background: #f1f5f9; /* slate-100 */
-            border-radius: 10px;
+        header img {
+          width: 60px !important;
+          height: 60px !important;
+          margin-bottom: 0.3rem !important;
+          border-width: 2px !important;
         }
-        ::-webkit-scrollbar-thumb {
-            background: #64748b; /* slate-500 */
-            border-radius: 10px;
+        h1 {
+          font-size: 1.3rem !important;
+          margin-bottom: 0.1rem !important;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #475569; /* slate-600 */
+        .text-lg,
+        .md\:text-xl {
+          font-size: 1rem !important;
         }
-
-        /* Print styles */
-        @media print {
-            body {
-                background-color: #fff;
-                color: #000;
-                margin: 0;
-                padding: 0;
-            }
-            .no-print {
-                display: none !important;
-            }
-            .container {
-                max-width: none;
-                margin: 0;
-                padding: 0;
-            }
-            header, footer, .resume-section, .accordion-item {
-                box-shadow: none !important;
-                border: none !important;
-                padding: 0.5rem 0 !important; /* Reduced padding for print */
-                margin-bottom: 0.5rem !important; /* Reduced margin for print */
-            }
-            .accordion-content {
-                max-height: none !important; /* Ensure all content is visible */
-                overflow: visible !important;
-                padding: 0.25rem 0 !important; /* Reduced padding for print */
-            }
-            .accordion-button {
-                padding: 0.5rem 0 !important; /* Reduced padding for print */
-            }
-            h1, h2, h3, h4, p, li, strong, a {
-                color: #000 !important;
-                font-size: inherit !important; /* Ensure font sizes are consistent */
-            }
-            a {
-                text-decoration: none !important;
-            }
-            /* Adjust spacing for lists in print */
-            ul.list-disc li {
-                margin-bottom: 0.2rem;
-            }
+        .grid p,
+        .text-sm {
+          font-size: 0.92rem !important;
         }
+        ul li,
+        ol li {
+          font-size: 0.92rem !important;
+          margin-bottom: 0.1rem !important;
+        }
+        .no-print,
+        footer {
+          display: none !important;
+        }
+      }
     </style>
-</head>
-<body class="bg-slate-50 text-slate-700 antialiased">
-
+  </head>
+  <body class="bg-slate-50 text-slate-700 antialiased">
     <div class="container mx-auto max-w-4xl p-4 md:p-6">
-        <header class="text-center mb-6 md:mb-8 relative">
-            <img src="https://jackeryjam.github.io/public/assets/avator.jpg" alt="詹前广的头像" class="w-28 h-28 rounded-full mx-auto mb-3 object-cover border-4 border-sky-700 shadow-lg">
-            <h1 class="text-3xl md:text-4xl font-bold text-sky-700">詹前广</h1>
-            <p class="text-lg md:text-xl text-slate-600 mt-1">高级前端工程师</p>
-            <button id="exportPdfBtn" class="no-print absolute top-0 right-0 bg-sky-700 text-white text-sm py-1 px-3 rounded-md hover:bg-sky-800 transition-colors duration-150 shadow-md">导出为 PDF</button>
-        </header>
+      <header class="text-center mb-6 md:mb-8 relative">
+        <img
+          src="https://jackeryjam.github.io/public/assets/avator.jpg"
+          alt="詹前广的头像"
+          class="w-28 h-28 rounded-full mx-auto mb-3 object-cover border-4 border-sky-700 shadow-lg"
+        />
+        <h1 class="text-3xl md:text-4xl font-bold text-sky-700">詹前广</h1>
+        <!-- <p class="text-lg md:text-xl text-slate-600 mt-1">高级前端工程师</p> -->
+        <div
+          id="qrCodeContainer"
+          class="absolute top-0 right-0 hidden md:flex flex-col items-center justify-center"
+        >
+          <div id="qrcode" class="w-[80px] h-[80px]"></div>
+        </div>
+      </header>
 
-        <main class="space-y-8">
-            <section id="basic-info" class="resume-section bg-white p-5 rounded-lg shadow-md">
-                <h2 class="text-xl font-semibold text-sky-700 mb-3">基本信息</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-sm text-slate-600">
-                    <p><strong>姓名:</strong> 詹前广</p>
-                    <p><strong>性别:</strong> 男</p>
-                    <p><strong>出生年月:</strong> 1996年12月</p>
-                    <p><strong>联系方式:</strong> <a href="tel:+8615602315027" class="text-sky-600 hover:underline">📞 +86 15602315027</a> (微信同号)</p>
-                    <p><strong>邮箱:</strong> <a href="mailto:jackeryjam@qq.com" class="text-sky-600 hover:underline">📧 jackeryjam@qq.com</a></p>
-                    <p><strong>毕业院校:</strong> 深圳大学 (2019年本科毕业)</p>
-                    <p><strong>专业:</strong> 计算机科学与技术</p>
-                    <p><strong>技能证书:</strong> 证券从业资格证, 基金从业资格证, 四六级英语证书</p>
-                    <p><strong>个人博客:</strong> <a href="https://juejin.cn/user/2480914507248088" target="_blank" rel="noopener noreferrer" class="text-sky-600 hover:underline">🔗 掘金主页</a></p>
-                    <p><strong>求职意向:</strong> 高级前端工程师</p>
-                </div>
-            </section>
+      <main class="space-y-6">
+        <section
+          id="basic-info"
+          class="resume-section bg-white p-5 rounded-lg shadow-md"
+        >
+          <h2 class="text-xl font-semibold text-sky-700">基本信息</h2>
+          <div
+            class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-sm text-slate-600"
+          >
+            <p><strong>姓名:</strong> 詹前广</p>
+            <p><strong>性别:</strong> 男</p>
+            <p><strong>出生年月:</strong> 1996年12月</p>
+            <p>
+              <strong>联系方式:</strong>
+              <a href="tel:+8615602315027" class="text-sky-600 hover:underline"
+                >📞 +86 15602315027</a
+              >
+              (微信同号)
+            </p>
+            <p>
+              <strong>邮箱:</strong>
+              <a
+                href="mailto:jackeryjam@qq.com"
+                class="text-sky-600 hover:underline"
+                >📧 jackeryjam@qq.com</a
+              >
+            </p>
+            <p><strong>毕业院校:</strong> 深圳大学 (2019年本科毕业)</p>
+            <p><strong>专业:</strong> 计算机科学与技术</p>
+            <p>
+              <strong>技能证书:</strong> 证券从业资格证, 基金从业资格证,
+              四六级英语证书
+            </p>
+            <p>
+              <strong>个人博客:</strong>
+              <a
+                href="https://juejin.cn/user/2480914507248088"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-sky-600 hover:underline"
+                >🔗 掘金主页</a
+              >
+            </p>
+            <p><strong>求职意向:</strong> 高级前端工程师</p>
+          </div>
+        </section>
 
-            <section id="work-experience" class="resume-section bg-white p-5 rounded-lg shadow-md">
-                <h2 class="text-xl font-semibold text-sky-700 mb-3">工作经历 (时间由近及远)</h2>
-                <div class="space-y-4 accordion-container">
-                    <div class="accordion-item border border-slate-200 rounded-lg">
-                        <button class="accordion-button w-full flex justify-between items-center p-3 bg-slate-100 hover:bg-slate-200 transition-colors duration-150 rounded-t-lg">
-                            <div class="text-left">
-                                <h3 class="text-base font-medium text-sky-700">中国中金财富证券有限公司</h3>
-                                <p class="text-xs text-slate-500">前端开发工程师 (2023.02 - 至今)</p>
-                            </div>
-                            <span class="accordion-arrow text-sky-700 transform transition-transform duration-200 text-xl">&rarr;</span>
-                        </button>
-                        <div class="accordion-content p-3 border-t border-slate-200 rounded-b-lg text-sm">
-                            <p class="mb-2 text-slate-600">在客群发展部落的品牌与市场营销团队作为前端开发工程师，参与部门的市场营销系统的开发及维护工作。</p>
-                            <h4 class="font-semibold mt-2 mb-1 text-slate-700">市场活动营销系统:</h4>
-                            <ul class="list-disc list-inside space-y-1 text-slate-600">
-                                <li>负责"中金财富+"小程序、市场营销管理系统、市场营销企微端三端的开发和运维。</li>
-                                <li>系统串起活动管理、管理层、投资顾问、客户四个角色，标准化活动创建、活动推广、活动报名、参会签到、数据跟踪五个流程。</li>
-                                <li>支持十几个总部团队，为近四千名投顾提供数字化邀约工具，沉淀二十几万客户信息。</li>
-                                <li><strong>技术亮点:</strong>
-                                    <ul class="list-disc list-inside ml-4 space-y-1">
-                                        <li>小程序使用 Vue + Taro 技术栈，实现多端兼容方案，包括功能实现、导航方案、埋点方案、溯源方案、样式兼容、日志方案等。</li>
-                                        <li>管理系统使用 Vue + Element + ECharts，沉淀 MktTable 等工具，提高表格、表单开发效率，可在掘金中看到相关介绍。</li>
-                                        <li>企微助手使用 Vue + Vant UI，开发 ScrollList 组件支持大数据列表展示，可在掘金中看到相关介绍。</li>
-                                        <li>1018 邀请函项目实现高级动效，采用双轨视频切换方案保证动画流畅性。</li>
-                                    </ul>
-                                </li>
-                            </ul>
-                            <h4 class="font-semibold mt-2 mb-1 text-slate-700">AI 直播视频助手:</h4>
-                            <ul class="list-disc list-inside space-y-1 text-slate-600">
-                                <li>整合 MiniMax API 和公司研报，根据用户输入主题生成 AI 视频脚本和直播脚本。</li>
-                                <li>集成阿里 ASR 模型实现视频语音识别，支持视频划词截取、合并导出、降噪和语气词消除。</li>
-                                <li>引入 AI 智能编程，在项目中使用大幅提升开发效率。</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="accordion-item border border-slate-200 rounded-lg">
-                        <button class="accordion-button w-full flex justify-between items-center p-3 bg-slate-100 hover:bg-slate-200 transition-colors duration-150 rounded-t-lg">
-                            <div class="text-left">
-                                <h3 class="text-base font-medium text-sky-700">深圳虾皮信息科技有限公司</h3>
-                                <p class="text-xs text-slate-500">前端开发工程师 (2020.09 - 2022.09)</p>
-                            </div>
-                            <span class="accordion-arrow text-sky-700 transform transition-transform duration-200 text-xl">&rarr;</span>
-                        </button>
-                        <div class="accordion-content p-3 border-t border-slate-200 rounded-b-lg text-sm">
-                            <p class="mb-2 text-slate-600">在 Digital Product & Local Service 部门担任前端开发工程师，负责 OTA 及生活服务票券业务。</p>
-                            <h4 class="font-semibold mt-2 mb-1 text-slate-700">RN 减包优化项目:</h4>
-                            <ul class="list-disc list-inside space-y-1 text-slate-600">
-                                <li>主导部门 RN 项目的包体积优化工作，采用分析、减包、预防三步走策略。</li>
-                                <li>优化措施：分析定位 JS、图片资源、翻译文件三大体积占用；实施优化：剔除冗余 npm 包、压缩图片资源、过滤翻译文件；建立预防机制：CNN 重复图片提交拦截、包体积周报预警。</li>
-                                <li>最终实现 JS 部分减少 20% 体积，整体减少 50% 体积。</li>
-                            </ul>
-                            <h4 class="font-semibold mt-2 mb-1 text-slate-700">代码覆盖率系统:</h4>
-                            <ul class="list-disc list-inside space-y-1 text-slate-600">
-                                <li>参与虾皮内部代码质量控制工具的开发。</li>
-                                <li>主要工作：开发功能分支覆盖率追溯功能；设计并实现本地分支分析 SDK；开发数据可视化面板。</li>
-                                <li>项目成果被推广到虾皮多个部门使用，相关技术文章发表于虾皮技术公众号。</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="accordion-item border border-slate-200 rounded-lg">
-                        <button class="accordion-button w-full flex justify-between items-center p-3 bg-slate-100 hover:bg-slate-200 transition-colors duration-150 rounded-t-lg">
-                            <div class="text-left">
-                                <h3 class="text-base font-medium text-sky-700">招银网络科技有限公司</h3>
-                                <p class="text-xs text-slate-500">软件开发工程师 (2019.08 - 2020.09)</p>
-                            </div>
-                            <span class="accordion-arrow text-sky-700 transform transition-transform duration-200 text-xl">&rarr;</span>
-                        </button>
-                        <div class="accordion-content p-3 border-t border-slate-200 rounded-b-lg text-sm">
-                            <p class="mb-2 text-slate-600">在对公基础开发团队担任软件开发工程师。</p>
-                            <ul class="list-disc list-inside space-y-1 text-slate-600">
-                                <li>独立负责园区购电项目、交易通等银行业务的管理平台前端开发。</li>
-                                <li>参与海关关税查缴、统一支付云账单等对公业务的后端开发。</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="skills" class="resume-section bg-white p-5 rounded-lg shadow-md">
-                <h2 class="text-xl font-semibold text-sky-700 mb-3">专业技能</h2>
-                <div class="space-y-3 text-sm">
-                    <div>
-                        <h3 class="text-base font-medium text-slate-700">编码技能:</h3>
-                        <p class="text-slate-600">熟练使用 Cursor 等 AI 编码工具。</p>
-                    </div>
-                    <div>
-                        <h3 class="text-base font-medium text-slate-700">基本技能:</h3>
-                        <p class="text-slate-600">熟悉 HTML、CSS、JavaScript、TypeScript、Node.js，对于浏览器的渲染过程有基本的认知。</p>
-                    </div>
-                    <div>
-                        <h3 class="text-base font-medium text-slate-700">开发框架:</h3>
-                        <p class="text-slate-600">熟悉 Vue、React、React Native、Taro、Nest.js，对 Vue 和 React 的运行原理有相应的了解。</p>
-                    </div>
-                    <div>
-                        <h3 class="text-base font-medium text-slate-700">其它:</h3>
-                        <p class="text-slate-600">曾使用过 Java、Spring Boot 等后端技术(第一年工作)。</p>
-                    </div>
-                </div>
-            </section>
-
-            <section id="preferences" class="resume-section bg-white p-5 rounded-lg shadow-md">
-                <h2 class="text-xl font-semibold text-sky-700 mb-3">个人喜好</h2>
-                <ul class="list-none space-y-2 text-sm text-slate-600">
-                    <li class="flex items-start">
-                        <span class="text-sky-600 mr-2 text-lg">📚</span>
-                        <div><strong>持续学习:</strong> 热爱阅读商业和技术类书籍，如《纳瓦尔宝典》《穷爸爸富爸爸》《深度学习》等，培养商业思维和职业素养。</div>
+        <section
+          id="work-experience"
+          class="resume-section bg-white p-5 rounded-lg shadow-md"
+        >
+          <h2 class="text-xl font-semibold text-sky-700">
+            工作经历 (时间由近及远)
+          </h2>
+          <div class="space-y-4">
+            <!-- 第一份工作 -->
+            <div>
+              <div class="text-left mb-2">
+                <h3 class="text-base font-medium text-sky-700">
+                  中国中金财富证券有限公司
+                </h3>
+                <p class="text-xs text-slate-500">
+                  前端开发工程师 (2023.02 - 至今)
+                </p>
+              </div>
+              <p class="mb-2 text-slate-600 text-sm">
+                在客群发展部落的品牌与市场营销团队作为前端开发工程师，参与部门的市场营销系统的开发及维护工作。
+              </p>
+              <h4 class="font-semibold mt-3 mb-1.5 text-slate-700 text-sm">
+                市场活动营销系统:
+              </h4>
+              <ul
+                class="list-disc list-inside space-y-1.5 text-slate-600 text-sm"
+              >
+                <li>
+                  负责"中金财富+"小程序、市场营销管理系统、市场营销企微端三端的开发和运维。
+                </li>
+                <li>
+                  系统串起活动管理、管理层、投资顾问、客户四个角色，标准化活动创建、活动推广、活动报名、参会签到、数据跟踪五个流程。
+                </li>
+                <li>
+                  支持十几个总部团队，为近四千名投顾提供数字化邀约工具，沉淀二十几万客户信息。
+                </li>
+                <li>
+                  <strong>技术亮点:</strong>
+                  <ul class="list-disc list-inside ml-4 space-y-1">
+                    <li>
+                      小程序使用 Vue + Taro
+                      技术栈，实现多端兼容方案，包括功能实现、导航方案、埋点方案、溯源方案、样式兼容、日志方案等。
                     </li>
-                    <li class="flex items-start">
-                        <span class="text-sky-600 mr-2 text-lg">💡</span>
-                        <div><strong>技术探索:</strong> 持续关注科技前沿，定期研究英伟达、Google、微软等科技巨头的技术发布会，深入探索AI领域创新。</div>
+                    <li>
+                      管理系统使用 Vue + Element + ECharts，沉淀 MktTable
+                      等工具，提高表格、表单开发效率。
                     </li>
-                    <li class="flex items-start">
-                        <span class="text-sky-600 mr-2 text-lg">🏃‍♂️</span>
-                        <div><strong>健康生活:</strong> 保持规律运动习惯，通过跑步、游泳、打球等运动维持良好身心状态，确保工作高效。</div>
+                    <li>
+                      企微助手使用 Vue + Vant UI，开发 ScrollList
+                      组件支持大数据列表展示。
                     </li>
-                </ul>
-            </section>
+                    <li>
+                      1018
+                      邀请函项目实现高级动效，采用双轨视频切换方案保证动画流畅性。
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+              <h4 class="font-semibold mt-3 mb-1.5 text-slate-700 text-sm">
+                AI 直播视频助手:
+              </h4>
+              <ul
+                class="list-disc list-inside space-y-1.5 text-slate-600 text-sm"
+              >
+                <li>
+                  整合 MiniMax API 和公司研报，根据用户输入主题生成 AI
+                  视频脚本和直播脚本。
+                </li>
+                <li>
+                  集成阿里 ASR
+                  模型实现视频语音识别，支持视频划词截取、合并导出、降噪和语气词消除。
+                </li>
+                <li>引入 AI 智能编程，在项目中使用大幅提升开发效率。</li>
+              </ul>
+            </div>
+            <hr class="my-4 border-dashed border-slate-300" />
+            <!-- 第二份工作 -->
+            <div>
+              <div class="text-left mb-2">
+                <h3 class="text-base font-medium text-sky-700">
+                  深圳虾皮信息科技有限公司
+                </h3>
+                <p class="text-xs text-slate-500">
+                  前端开发工程师 (2020.09 - 2022.09)
+                </p>
+              </div>
+              <p class="mb-2 text-slate-600 text-sm">
+                在 Digital Product & Local Service 部门担任前端开发工程师，负责
+                OTA 及生活服务票券业务。
+              </p>
+              <h4 class="font-semibold mt-3 mb-1.5 text-slate-700 text-sm">
+                RN 减包优化项目:
+              </h4>
+              <ul
+                class="list-disc list-inside space-y-1.5 text-slate-600 text-sm"
+              >
+                <li>
+                  主导部门 RN
+                  项目的包体积优化工作，采用分析、减包、预防三步走策略。
+                </li>
+                <li>
+                  优化措施：分析定位
+                  JS、图片资源、翻译文件三大体积占用；实施优化：剔除冗余 npm
+                  包、压缩图片资源、过滤翻译文件；建立预防机制：CNN
+                  重复图片提交拦截、包体积周报预警。
+                </li>
+                <li>最终实现 JS 部分减少 20% 体积，整体减少 50% 体积。</li>
+              </ul>
+              <h4 class="font-semibold mt-3 mb-1.5 text-slate-700 text-sm">
+                代码覆盖率系统:
+              </h4>
+              <ul
+                class="list-disc list-inside space-y-1.5 text-slate-600 text-sm"
+              >
+                <li>参与虾皮内部代码质量控制工具的开发。</li>
+                <li>
+                  主要工作：开发功能分支覆盖率追溯功能；设计并实现本地分支分析
+                  SDK；开发数据可视化面板。
+                </li>
+                <li>
+                  项目成果被推广到虾皮多个部门使用，相关技术文章发表于虾皮技术公众号。
+                </li>
+              </ul>
+            </div>
+            <hr class="my-4 border-dashed border-slate-300" />
+            <!-- 第三份工作 -->
+            <div>
+              <div class="text-left mb-2">
+                <h3 class="text-base font-medium text-sky-700">
+                  招银网络科技有限公司
+                </h3>
+                <p class="text-xs text-slate-500">
+                  软件开发工程师 (2019.08 - 2020.09)
+                </p>
+              </div>
+              <p class="mb-2 text-slate-600 text-sm">
+                在对公基础开发团队担任软件开发工程师。
+              </p>
+              <ul
+                class="list-disc list-inside space-y-1.5 text-slate-600 text-sm"
+              >
+                <li>
+                  独立负责园区购电项目、交易通等银行业务的管理平台前端开发。
+                </li>
+                <li>参与海关关税查缴、统一支付云账单等对公业务的后端开发。</li>
+              </ul>
+            </div>
+          </div>
+        </section>
 
-            <section id="career-plan" class="resume-section bg-white p-5 rounded-lg shadow-md">
-                <h2 class="text-xl font-semibold text-sky-700 mb-3">职业规划</h2>
-                <p class="text-sm text-slate-600 leading-relaxed">作为一名对技术充满热情的前端工程师，我始终关注着科技行业的最新发展。通过持续学习，我深入研究了AI领域的前沿技术，包括英伟达、Google等科技巨头的创新成果。我期待能够加入一个充满创新活力的团队，将AI技术与前端开发深度融合，为用户创造更智能、更高效的产品体验。我相信，在AI快速发展的时代，前端工程师可以通过技术创新，为产品带来更多可能性。我希望能在一个重视技术创新、鼓励持续学习的团队中，不断提升自己的技术能力，为团队和公司创造更大的价值。</p>
-            </section>
-        </main>
+        <section
+          id="skills"
+          class="resume-section bg-white p-5 rounded-lg shadow-md"
+        >
+          <h2 class="text-xl font-semibold text-sky-700">专业技能</h2>
+          <div class="space-y-3 text-sm">
+            <div>
+              <h3 class="text-base font-medium text-slate-700 mb-1">
+                编码技能:
+              </h3>
+              <p class="text-slate-600">熟练使用 Cursor 等 AI 编码工具。</p>
+            </div>
+            <div>
+              <h3 class="text-base font-medium text-slate-700 mb-1">
+                基本技能:
+              </h3>
+              <p class="text-slate-600">
+                熟悉
+                HTML、CSS、JavaScript、TypeScript、Node.js，对于浏览器的渲染过程有基本的认知。
+              </p>
+            </div>
+            <div>
+              <h3 class="text-base font-medium text-slate-700 mb-1">
+                开发框架:
+              </h3>
+              <p class="text-slate-600">
+                熟悉 Vue、React、React Native、Taro、Nest.js，对 Vue 和 React
+                的运行原理有相应的了解。
+              </p>
+            </div>
+            <div>
+              <h3 class="text-base font-medium text-slate-700 mb-1">其它:</h3>
+              <p class="text-slate-600">
+                曾使用过 Java、Spring Boot 等后端技术(第一年工作)。
+              </p>
+            </div>
+          </div>
+        </section>
 
-        <footer class="text-center mt-8 py-4 border-t border-slate-200">
-            <p class="text-xs text-slate-500">&copy; <span id="currentYear"></span> 詹前广. 保留所有权利.</p>
-        </footer>
+        <section
+          id="preferences"
+          class="resume-section bg-white p-5 rounded-lg shadow-md"
+        >
+          <h2 class="text-xl font-semibold text-sky-700">个人喜好</h2>
+          <ul class="list-none space-y-2.5 text-sm text-slate-600">
+            <li class="flex items-start">
+              <span class="text-sky-600 mr-2.5 text-lg">📚</span>
+              <div>
+                <strong>持续学习:</strong>
+                热爱阅读商业和技术类书籍，如《纳瓦尔宝典》《穷爸爸富爸爸》《深度学习》等，培养商业思维和职业素养。
+              </div>
+            </li>
+            <li class="flex items-start">
+              <span class="text-sky-600 mr-2.5 text-lg">💡</span>
+              <div>
+                <strong>技术探索:</strong>
+                持续关注科技前沿，定期研究英伟达、Google、微软等科技巨头的技术发布会，深入探索AI领域创新。
+              </div>
+            </li>
+            <li class="flex items-start">
+              <span class="text-sky-600 mr-2.5 text-lg">🏃‍♂️</span>
+              <div>
+                <strong>健康生活:</strong>
+                保持规律运动习惯，通过跑步、游泳、打球等运动维持良好身心状态，确保工作高效。
+              </div>
+            </li>
+          </ul>
+        </section>
+
+        <section
+          id="career-plan"
+          class="resume-section bg-white p-5 rounded-lg shadow-md"
+        >
+          <h2 class="text-xl font-semibold text-sky-700">职业规划</h2>
+          <p class="text-sm text-slate-600 leading-relaxed">
+            作为一名对技术充满热情的前端工程师，我始终关注着科技行业的最新发展。通过持续学习，我深入研究了AI领域的前沿技术，包括英伟达、Google等科技巨头的创新成果。我期待能够加入一个充满创新活力的团队，将AI技术与前端开发深度融合，为用户创造更智能、更高效的产品体验。我相信，在AI快速发展的时代，前端工程师可以通过技术创新，为产品带来更多可能性。我希望能在一个重视技术创新、鼓励持续学习的团队中，不断提升自己的技术能力，为团队和公司创造更大的价值。
+          </p>
+        </section>
+      </main>
+
+      <footer class="text-center mt-8 py-4 no-print"></footer>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const accordionButtons = document.querySelectorAll('.accordion-button');
-            const exportPdfBtn = document.getElementById('exportPdfBtn');
+      document.addEventListener("DOMContentLoaded", function () {
+        const qrCodeContainer = document.getElementById("qrcode");
+        const qrCodeWrapper = document.getElementById("qrCodeContainer");
 
-            // Accordion functionality
-            accordionButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const content = button.nextElementSibling;
-                    button.classList.toggle('open');
-                    if (content.style.maxHeight) {
-                        content.style.maxHeight = null;
-                    } else {
-                        content.style.maxHeight = content.scrollHeight + "px";
-                    }
-                });
-            });
-
-            // PDF Export functionality
-            exportPdfBtn.addEventListener('click', () => {
-                window.print();
-            });
-
-            document.getElementById('currentYear').textContent = new Date().getFullYear();
-        });
+        if (
+          qrCodeContainer &&
+          window.matchMedia("(min-width: 768px)").matches
+        ) {
+          new QRCode(qrCodeContainer, {
+            text: "https://jackeryjam.github.io/public/resume/index.html",
+            width: 80,
+            height: 80,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.L,
+          });
+          qrCodeWrapper.classList.remove("hidden");
+          qrCodeWrapper.classList.add("flex");
+        }
+      });
     </script>
-</body>
+  </body>
 </html>
